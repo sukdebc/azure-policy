@@ -15,4 +15,10 @@ Here are some key points about Azure Policy:
 For more details visit https://learn.microsoft.com/en-in/azure/governance/policy/overview
 
 ## Sample Policy
-I have uploaded few policy definations that can be useful
+Let's define some policies to acheive below purposes
+
+1. Generic: Ensuring some org specific standards like Resource Naming, Allowed Locations, Allowed VM Images etc
+2. Security: Ensure TLS for storage/application gateway etc, Enabling soft delete for Key Vault/Storage etc, Configuring firewall,VNet for PaaS services, Configuring SQL Server Security settings, Configuring NSG/NIC etc
+3. Tag: Adding Tag automatically on resource creation
+4. Cost: Enable Windows Hybrid Benefits, VM Size/Type restriction etc
+5. Monitoring: Configure and forward Diganostic/Activity Logs to central location, Enable Network Watcher etc
