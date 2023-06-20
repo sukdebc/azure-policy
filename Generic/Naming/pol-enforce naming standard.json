@@ -1,0 +1,494 @@
+{
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "pol-enforce naming standard",
+  "properties": {
+    "mode": "All",
+    "displayName": "pol-enforce naming standard",
+    "description": "Policy enforces proper naming convention.",
+    "metadata": {
+      "description": "This policy enforce resource name ends with resource type (3 charecters)",
+      "category": "Naming",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "effect": {
+        "type": "string",
+        "defaultValue": "audit"
+      },
+      "exceptionTagValue": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Value of exceptiontag for exception",
+          "description": "Value of exceptiontag if present in the resource policy execution will be skipped."
+        },
+        "defaultValue": "skipnamingpolicy"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allof": [
+          {
+            "value": "[resourceGroup().managedBy]",
+            "equals": ""
+          },
+          {
+            "value": "[resourceGroup().tags['exceptiontag']]",
+            "notContains": "[parameters('exceptionTagValue')]"
+          },
+          {
+            "field": "tags['exceptiontag']",
+            "notContains": "[parameters('exceptionTagValue')]"
+          },
+          {
+            "not": {
+              "anyof": [
+                {
+                  "value": "[resourceGroup().name]",
+                  "like": "defaultresourcegroup-*"
+                },
+                {
+                  "value": "[resourceGroup().name]",
+                  "like": "NetworkWatcherRG*"
+                }
+              ]
+            }
+          },
+          {
+            "anyOf": [
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'rgp')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.automation/automationaccounts"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'aac')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.cache/redis"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'red')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.compute/images"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'img')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.compute/proximityplacementgroups"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'ppg')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.compute/snapshots"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'snp')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.containerinstance/containergroups"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'aci')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.containerregistry/registries"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'acr')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.dbformysql/servers"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'mql')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.dbforpostgresql/servers"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'pql')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.documentdb/databaseaccounts"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'cdb')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.keyvault/vaults"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'key')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/applicationgateways"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'agw')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/applicationsecuritygroups"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'asg')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/azurefirewalls"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'afw')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/bastionhosts"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'bsn')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/loadbalancers"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'lbr')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/privateendpoints"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'pep')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/publicipaddresses"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'pip')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/routetables"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'rtb')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/virtualnetworkgateways"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'vng')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/virtualnetworks"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'vnt')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.recoveryservices/vaults"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'rsv')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.signalrservice/signalr"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'sgr')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.sql/managedinstances"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'sqm')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.sql/servers"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'sqs')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.storage/storageaccounts"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'sta')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.web/hostingenvironments"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'ase')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "sendgrid.email/accounts"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'sge')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.DBforMariaDB/servers"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'mdb')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Network/firewallPolicies"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'fwp')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Network/virtualWans"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'wan')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+
+              
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.network/networksecuritygroups"
+                  },
+                  {
+                    "value": "[endsWith(field('name'), 'nsg')]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Sql/servers/databases"
+                  },
+                  {
+                    "value": "[if(equals(field('Microsoft.Sql/servers/databases/sku.tier'), 'DataWarehouse'), endsWith(field('name'), 'sqw'), endsWith(field('name'), 'sqd'))]",
+                    "equals": "false"
+                  }
+                ]
+              },
+              {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "microsoft.web/sites"
+                  },
+                  {
+                    "value": "[if(contains(field('kind'), 'functionapp'), endsWith(field('name'), 'fnc'), endsWith(field('name'), 'app'))]",
+                    "equals": "false"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

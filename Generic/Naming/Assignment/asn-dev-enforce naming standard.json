@@ -1,0 +1,34 @@
+{
+    "type": "Microsoft.Authorization/policyAssignments",
+    "name": "asn-dev-enforce naming standard",
+    "properties": {
+        "description": "Policy enforces proper naming convention.",
+        "displayName": "asn-dev-enforce naming standard",
+        "parameters": {
+            "effect": {
+                "value": "deny"
+            },
+            "exceptionTagValue": {
+                "value": "skipnamingpolicy"
+            }
+        },
+        "nonComplianceMessages": [
+            {
+                "message": "Resource names must ends with three charecters type code. Refer conflunce page for details."
+            }
+        ],
+        "resourceSelectors": [],
+        "overrides": [],
+        "notScopes": [],
+        "enforcementMode": "Default",
+        "identity": {
+            "type": "None"
+        },
+        "Location": "eastus",
+        "RoleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/pol-enforce naming standard",
+        "scope": "/subscriptions/{subscriptionId}"
+    }
+}
