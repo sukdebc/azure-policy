@@ -1,0 +1,77 @@
+{
+  "type": "Microsoft.Authorization/policyAssignments",
+  "name": "asn-dv-rgp-enforce tags",
+  "properties": {
+    "description": "Enforce mandatory tags - 'business owner', 'functional owner', 'cost center', 'department', 'data classification' and 'env' in resource group",
+    "displayName": "asn-dv-rgp-enforce tags",
+    "parameters": {
+      "effect": {
+        "value": "Deny"
+      },
+      "tagBusinessOwner": {
+        "value": "business owner"
+      },
+      "tagFinancialOwner": {
+        "value": "business owner"
+      },
+      "tagCostCenter": {
+        "value": "business owner"
+      },
+      "tagDepartment": {
+        "value": "department"
+      },
+      "tagDataClassification": {
+        "value": "data classification"
+      },
+      "dataClassificationList": {
+        "value": [
+          "public",
+          "general",
+          "confidential",
+          "highly confidential" 
+        ]
+      },
+      "tagEnvironment": {
+        "value": "env"
+      },
+      "envList": {
+        "value": [
+          "dev",
+          "uat",
+          "tst",
+          "prd"
+        ]
+      },
+      "excludedRGNameStartsWith": {
+        "Value": [
+          "networkwatcherrg",
+          "defaultresourcegroup",
+          "azurebackuprg"
+        ]
+      },
+      "exceptionTagValue": {
+        "value": "skiptagpol"
+      }
+    },
+    "nonComplianceMessages": [
+      {
+        "message": "Resource group must have following tags - 'business owner', 'functional owner', 'cost center', 'department', 'data classification' and 'env'."
+      }
+    ],
+    "resourceSelectors": [],
+    "overrides": [],
+    "notScopes": [],
+    "enforcementMode": "Default",
+    "identity": {
+      "type": "None"
+    },
+    "Location": "eastus",
+    "RoleDefinitionIds": [
+      "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+    ],
+    "CanOverWriteWorkFlow": false,
+    "CanOverWriteEffect": false,
+    "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/pol-rgp-enforce tags",
+    "scope": "/subscriptions/{subscriptionId}"
+  }
+}

@@ -91,7 +91,7 @@ Function AssignPolicy
 	
 	#Check for AssignIdentity. 'AssignIdentity' pass true only for the modify and deployeIfNotExists. Other policy don't pass the Parameter
 	if($assignmentIdentity -eq "true"){
-		$assignment = New-AzPolicyAssignment @deployParams -AssignIdentity -Location $assignmentLocation
+		$assignment = New-AzPolicyAssignment @deployParams -IdentityType "SystemAssigned" -Location $assignmentLocation
 	}
 	else{
 		$assignment = New-AzPolicyAssignment @deployParams  

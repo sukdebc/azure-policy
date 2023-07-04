@@ -1,0 +1,41 @@
+{
+    "type": "Microsoft.Authorization/policyAssignments",
+    "name": "asn-dv-all-inherit tags from rgp",
+    "properties": {
+        "description": "Inherit following tags - 'business owner', 'functional owner', 'cost center', 'department', 'data classification' and 'env' from Resource group.",
+        "displayName": "asn-dv-all-inherit tags from rgp",
+        "parameters": {
+            "effect": {
+                "value": "Modify"
+            },
+            "listOfExcludeResourceTypes": {
+                "value": [
+                    "Microsoft.Resources/subscriptions/resourceGroups",
+                    "Microsoft.Logic/integrationServiceEnvironments/managedApis"
+                ]
+            },
+            "exceptionTagValue": {
+                "value": "skiptagpol"
+            }
+        },
+        "nonComplianceMessages": [
+            {
+                "message": "Inherit following tags - 'business owner', 'functional owner', 'cost center', 'department', 'data classification' and 'env' from Resource group."
+            }
+        ],
+        "resourceSelectors": [],
+        "overrides": [],
+        "notScopes": [],
+        "enforcementMode": "Default",
+        "AssignIdentity": "true",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+        "Location": "eastus",
+        "RoleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/pol-all-inherit tags from rgp-arm",
+        "scope": "/subscriptions/{subscriptionId}"
+    }
+}

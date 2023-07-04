@@ -1,0 +1,172 @@
+{
+    "type": "Microsoft.Authorization/policyDefinitions",
+    "name": "pol-rgp-enforce tags",
+    "properties": {
+        "displayName": "pol-rgp-enforce tags",
+        "mode": "All",
+        "description": "Ensure tags are compliant at resource group level.",
+        "metadata": {
+            "description": "Ensure tags are compliant at resource group level",
+            "version": "1.0.0",
+            "category": "Tag"
+        },
+        "parameters": {
+            "effect": {
+                "type": "string",
+                "defaultValue": "Deny",
+                "allowedValues": [
+                    "Modify",
+                    "Deny",
+                    "Audit",
+                    "Disabled"
+                  ]
+            },
+            "tagBusinessOwner": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Business Owner Tag",
+                    "description": "Owner of the application, workload, or service."
+                },
+                "defaultValue": "business owner"
+            },
+            "tagFinancialOwner": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Financial Owner Tag",
+                    "description": "Person responsible for approving costs related to this resource."
+                },
+                "defaultValue": "financial owner"
+            },
+            "tagCostCenter": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Cost Center Tag",
+                    "description": "Accounting cost center associated with this resource."
+                },
+                "defaultValue": "cost center"
+            },
+            "tagDepartment": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Department Tag",
+                    "description": "Top-level division that owns the subscription or workload that the resource belongs to"
+                },
+                "defaultValue": "department"
+            },
+            "tagDataClassification": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Data Classification Tag"
+                },
+                "defaultValue": "data classification"
+            },
+            "dataClassificationList": {
+                "type": "Array",
+                "metadata": {
+                    "displayName": "Data Classification List",
+                    "description": "Sensitivity of data hosted by this resource."
+                },
+                "defaultValue": [
+                    "public",
+                    "general",
+                    "confidential",
+                    "highly confidential"
+                ]
+            },
+            "tagEnvironment": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Environment Tag",
+                    "description": "Deployment environment of the application, workload, or service."
+                },
+                "defaultValue": "env"
+            },
+            "envList": {
+                "type": "Array",
+                "metadata": {
+                    "displayName": "Environment List",
+                    "description": "Value of the tag need to select from the list of environment"
+                },
+                "defaultValue": [
+                    "dev",
+                    "uat",
+                    "tst",
+                    "prd"
+                ]
+            },
+            "excludedRGNameStartsWith": {
+                "type": "Array",
+                "metadata": {
+                    "displayName": "excludedRGNameStartsWith",
+                    "description": "The list of words that resource group name starts with and it can be excluded. RG name is split using '_' or '-' and first part is taken for checking."
+                },
+                "defaultValue": [
+                    "networkwatcherrg",
+                    "defaultresourcegroup",
+                    "azurebackuprg"
+                ]
+            },
+            "exceptionTagValue": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Value of exceptiontag",
+                    "description": "Value of exceptiontag if present in the resource policy execution will be skipped."
+                },
+                "defaultValue": "skiptagpol"
+            }
+        },
+        "policyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                    },
+                    {
+                        "value": "[if(contains(field('name'), '_'),split(field('name'), '_')[0],split(field('name'), '-')[0])]",
+                        "notIn": "[parameters('excludedRGNameStartsWith')]"
+                    },
+                    {
+                        "value": "[resourceGroup().managedBy]",
+                        "equals": ""
+                    },
+                    {
+                        "field": "tags['exceptiontag']",
+                        "notContains": "[parameters('exceptionTagValue')]"
+                    },
+                    {
+                        "anyOf": [
+                            {
+                                "field": "[concat('tags[', parameters('tagBusinessOwner'), ']')]",
+                                "notLike": "*@opencastsoftware.com"
+                            },
+                            {
+                                "field": "[concat('tags[', parameters('tagFinancialOwner'), ']')]",
+                                "notLike": "*@opencastsoftware.com"
+                            },
+                            {
+                                "field": "[concat('tags[', parameters('tagCostCenter'), ']')]",
+                                "equals": ""
+                            },
+                            {
+                                "field": "[concat('tags[', parameters('tagDepartment'), ']')]",
+                                "equals": ""
+                            },
+                            {
+                                "field": "[concat('tags[', parameters('tagDataClassification'), ']')]",
+                                "notIn": "[parameters('dataClassificationList')]"
+                            },
+                            {
+                                "field": "[concat('tags[', parameters('tagEnvironment'), ']')]",
+                                "notIn": "[parameters('envList')]"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "then": {
+                "effect": "[parameters('effect')]"
+            }
+        }
+    }
+}

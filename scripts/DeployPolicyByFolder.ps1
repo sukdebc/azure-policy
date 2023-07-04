@@ -15,9 +15,9 @@ Foreach ($file in $definitionFile)
     If ($file -notContains $excludedPathFilter){
     
         $count = $count + 1
+        Write-host "Processing '$file'..."
         #To Create Policy in subscription level
         &"$RepoRootPath/scripts/deployPolicy.ps1" -TemplateFile $file -SubscriptionId $SubscriptionId
-        Write-host "Processing '$file'..."
         Write-host ""
     }
 }

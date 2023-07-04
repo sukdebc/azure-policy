@@ -1,0 +1,99 @@
+{
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "pol-all-inherit tags from rgp-arm",
+ "properties": {
+  "displayName": "pol-all-inherit tags from rgp-arm",
+  "mode": "Indexed",
+  "description": "Adds or updates mandatory tags to all child resources from parent resource group.",
+  "metadata": {
+   "description": "Adds or updates mandatory tags to all child resources from parent resource group.",
+   "category": "Tags",
+   "version": "1.0.0"
+  },
+  "parameters": {
+   "effect": {
+    "type": "String",
+    "defaultValue": "Modify",
+    "allowedValues": [
+        "Modify",
+        "Audit",
+        "Disabled"
+      ]
+   },
+   "listOfExcludeResourceTypes": {
+    "type": "Array",
+    "metadata": {
+     "displayName": "listOfResourceTypesAllowed",
+     "description": "The list of resource types that can be deployed.",
+     "strongType": "resourceTypes"
+    },
+    "defaultValue": [
+     "Microsoft.Resources/subscriptions/resourceGroups",
+     "Microsoft.Logic/integrationServiceEnvironments/managedApis"
+    ]
+   },
+   "exceptionTagValue": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Value of exceptiontag",
+     "description": "Value of exceptiontag if present in the resource policy execution will be skipped."
+    },
+    "defaultValue": "skiptagpol"
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "notIn": "[parameters('listOfExcludeResourceTypes')]"
+     },
+     {
+      "field": "tags['exceptiontag']",
+      "notContains": "[parameters('exceptionTagValue')]"
+     }
+    ]
+   },
+   "then": {
+    "effect": "[parameters('effect')]",
+    "details": {
+     "roleDefinitionIds": [
+      "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+     ],
+     "operations": [
+      {
+       "operation": "addOrReplace",
+       "field": "tags['business owner']",
+       "value": "[resourceGroup().tags['business owner']]"
+      },
+      {
+       "operation": "addOrReplace",
+       "field": "tags['functional owner']",
+       "value": "[resourceGroup().tags['functional owner']]"
+      },
+      {
+       "operation": "addOrReplace",
+       "field": "tags['cost center']",
+       "value": "[resourceGroup().tags['cost center']]"
+      },
+      {
+       "operation": "addOrReplace",
+       "field": "tags['department']",
+       "value": "[resourceGroup().tags['department']]"
+      },
+      {
+       "operation": "addOrReplace",
+       "field": "tags['data classification']",
+       "value": "[resourceGroup().tags['data classification']]"
+      },
+      {
+       "operation": "addOrReplace",
+       "field": "tags['env']",
+       "value": "[resourceGroup().tags['env']]"
+      }
+     ]
+    }
+   }
+  }
+ }
+}
