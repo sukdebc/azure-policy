@@ -1,0 +1,35 @@
+{
+    "type": "Microsoft.Authorization/policyAssignments",
+    "name": "asn-dv-rgp-convert tags to lower",
+    "properties": {
+        "description": "This will modify tag values to lower case.",
+        "displayName": "asn-dv-rgp-convert tags to lower",
+        "parameters": {
+            "effect": {
+                "value": "Modify"
+            },
+            "exceptionTagValue": {
+                "value": "skiptagpol"
+            }
+        },
+        "nonComplianceMessages": [
+            {
+                "message": "Modify tag values to lower case."
+            }
+        ],
+        "resourceSelectors": [],
+        "overrides": [],
+        "notScopes": [],
+        "enforcementMode": "Default",
+        "AssignIdentity": "true",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+        "Location": "eastus",
+        "RoleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/pol-rgp-convert tags to lower-arm",
+        "scope": "/subscriptions/{subscriptionId}"
+    }
+}

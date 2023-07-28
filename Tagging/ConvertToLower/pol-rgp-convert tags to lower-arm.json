@@ -1,0 +1,66 @@
+{
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "pol-rgp-convert tags to lower-arm",
+  "properties": {
+    "displayName": "pol-rgp-convert tags to lower-arm",
+    "mode": "All",
+    "description": "This will modify tag values to lower case.",
+    "metadata": {
+      "description": "This will modify tag values to lower case.",
+      "category": "Tags",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "defaultValue": "Modify",
+        "allowedValues": [
+          "Modify",
+          "Audit",
+          "Disabled"
+        ]
+      },
+      "exceptionTagValue": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Value of exceptiontag",
+          "description": "Value of exceptiontag if present in the resource policy execution will be skipped."
+        },
+        "defaultValue": "skiptagpol"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "field": "tags",
+            "exists": true
+          },
+          {
+            "field": "tags['exceptiontag']",
+            "notContains": "[parameters('exceptionTagValue')]"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "roleDefinitionIds": [
+            "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+          ],
+          "operations": [
+            {
+              "operation": "addOrReplace",
+              "field": "tags",
+              "value": "[json(toLower(string(field('tags'))))]"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

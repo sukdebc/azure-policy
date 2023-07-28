@@ -113,7 +113,7 @@ Function AssignPolicy
 	}
 	
 	# Assign role to managed identity
-	if (($assignmentIdentity -eq "true") -and ($roleDefinitionIds.Count -gt 0))
+	if (($assignmentIdentity -eq "abc") -and ($roleDefinitionIds.Count -gt 0))
 	{
 		write-host "Starting role assignment"
 		# Check if retry count is present else set a default value

@@ -1,0 +1,294 @@
+{
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "pol-key-enforce monitoring-arm",
+ "properties": {
+  "displayName": "pol-key-enforce monitoring-arm",
+  "description": "This policy automatically deploys diagnostic settings for Azure Key Vault to a Log Analytics workspace.",
+  "metadata": {
+   "description": "This policy automatically deploys diagnostic settings for Azure Key Vault to a Log Analytics workspace.",
+   "version": "1.0.0",
+   "category": "Monitoring"
+  },
+  "parameters": {
+   "effect": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Effect",
+     "description": "The effect determines what happens when the policy rule is evaluated to match"
+    },
+    "defaultValue": "deployIfNotExists"
+   },
+   "profileName": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Profile Name for Config",
+     "description": "The profile name Azure Diagnostics"
+    },
+    "defaultValue": "workspace-by-policy"
+   },
+   "metricsEnabled": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Enable Metrics",
+     "description": "Enable Metrics - True or False"
+    },
+    "allowedValues": [
+     "True",
+     "False"
+    ],
+    "defaultValue": "True"
+   },
+   "metricsCategories": {
+    "type": "array",
+    "metadata": {
+     "displayName": "List of metrics categories",
+     "description": "List of metrics categories"
+    },
+    "defaultValue": [
+     "AllMetrics"
+    ]
+   },
+   "logsEnabled": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Enable Logs",
+     "description": "Enable Logs - True or False"
+    },
+    "allowedValues": [
+     "True",
+     "False"
+    ],
+    "defaultValue": "True"
+   },
+   "logCategories": {
+    "type": "array",
+    "metadata": {
+     "displayName": "List of log categories",
+     "description": "List of log categories"
+    },
+    "defaultValue": [
+     "AuditEvent"
+    ]
+   },
+   "workspaceList": {
+    "type": "Object",
+    "metadata": {
+     "displayName": "Region-wise workspace list",
+     "description": "Region-wise workspace list"
+    },
+    "defaultValue": {
+     "ukwest": "/subscriptions/e83f6d68-1c53-4c0a-80b5-8c8573a98e42/resourcegroups/test-monitor-rgp/providers/microsoft.operationalinsights/workspaces/centralmon-ukw-ala",
+     "default": "/subscriptions/e83f6d68-1c53-4c0a-80b5-8c8573a98e42/resourcegroups/test-monitor-rgp/providers/microsoft.operationalinsights/workspaces/centralmon-ukw-ala"
+    }
+   },
+   "logAnalyticsDestinationType": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Destination type for Log Analytics",
+     "description": "Destination type for Log Analytics. If value is 'Dedicated' it will be resource specific, if '' it will be Azure Diagnostic"
+    },
+    "allowedValues": [
+     "Dedicated",
+     ""
+    ],
+    "defaultValue": ""
+   },
+   "exceptionTagValue": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Value of exceptiontag for exception",
+     "description": "Value of exceptiontag for exception"
+    },
+    "defaultValue": "skipmon"
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.KeyVault/vaults"
+     },
+     {
+      "value": "[resourceGroup().tags['exceptiontag']]",
+      "notContains": "[parameters('exceptionTagValue')]"
+     },
+     {
+      "field": "tags['exceptiontag']",
+      "notContains": "[parameters('exceptionTagValue')]"
+     },
+     {
+      "value": "[and(contains(parameters('metricsCategories'), 'none'), contains(parameters('logCategories'),'none'))]",
+      "equals": "false"
+     }
+    ]
+   },
+   "then": {
+    "effect": "[parameters('effect')]",
+    "details": {
+     "type": "Microsoft.Insights/diagnosticSettings",
+     "existenceCondition": {
+      "allOf": [
+       {
+        "field": "name",
+        "equals": "[parameters('profileName')]"
+       },
+       {
+        "count": {
+         "field": "Microsoft.Insights/diagnosticSettings/metrics[*]",
+         "where": {
+          "allOf": [
+           {
+            "field": "Microsoft.Insights/diagnosticSettings/metrics[*].category",
+            "in": "[parameters('metricsCategories')]"
+           },
+           {
+            "field": "Microsoft.Insights/diagnosticSettings/metrics[*].enabled",
+            "equals": "[parameters('metricsEnabled')]"
+           }
+          ]
+         }
+        },
+        "equals": "[if(equals(first(parameters('metricsCategories')), 'none'), 0, length(parameters('metricsCategories')))]"
+       },
+       {
+        "count": {
+         "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+         "where": {
+          "allOf": [
+           {
+            "field": "Microsoft.Insights/diagnosticSettings/logs[*].category",
+            "in": "[parameters('logCategories')]"
+           },
+           {
+            "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+            "equals": "[parameters('logsEnabled')]"
+           }
+          ]
+         }
+        },
+        "equals": "[if(equals(first(parameters('logCategories')), 'none'), 0, length(parameters('logCategories')))]"
+       }
+      ]
+     },
+     "roleDefinitionIds": [
+      "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+     ],
+     "deployment": {
+      "properties": {
+       "mode": "incremental",
+       "template": {
+        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {
+         "vaultName": {
+          "type": "string"
+         },
+         "location": {
+          "type": "string"
+         },
+         "metricsEnabled": {
+          "type": "string"
+         },
+         "logsEnabled": {
+          "type": "string"
+         },
+         "profileName": {
+          "type": "string"
+         },
+         "workspaceList": {
+          "type": "Object"
+         },
+         "logAnalyticsDestinationType": {
+          "type": "string"
+         },
+         "metricsCategories": {
+          "type": "array"
+         },
+         "logCategories": {
+          "type": "array"
+         }
+        },
+        "variables": {
+         "workspaceId": "[if(contains(parameters('workspaceList'), parameters('location')),parameters('workspaceList')[parameters('location')],parameters('workspaceList')['default'])]",
+         "copy": [
+          {
+           "name": "logCategoryObj",
+           "count": "[length(parameters('logCategories'))]",
+           "input": {
+            "category": "[parameters('logCategories')[copyIndex('logCategoryObj')]]",
+            "enabled": "[parameters('logsEnabled')]"
+           }
+          },
+          {
+           "name": "metricsCategoryObj",
+           "count": "[length(parameters('metricsCategories'))]",
+           "input": {
+            "category": "[parameters('metricsCategories')[copyIndex('metricsCategoryObj')]]",
+            "enabled": "[parameters('metricsEnabled')]",
+            "retentionPolicy": {
+             "enabled": false,
+             "days": 0
+            }
+           }
+          }
+         ]
+        },
+        "resources": [
+         {
+          "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
+          "apiVersion": "2017-05-01-preview",
+          "name": "[concat(parameters('vaultName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+          "location": "[parameters('location')]",
+          "dependsOn": [],
+          "properties": {
+           "workspaceId": "[variables('workspaceId')]",
+           "logAnalyticsDestinationType": "[parameters('logAnalyticsDestinationType')]",
+           "metrics": "[if(equals(first(parameters('metricsCategories')), 'none'),json('null'), variables('metricsCategoryObj'))]",
+           "logs": "[if(equals(first(parameters('logCategories')), 'none'),json('null'), variables('logCategoryObj'))]"
+          }
+         }
+        ],
+        "outputs": {
+         "policy": {
+          "type": "string",
+          "value": "[concat(variables('workspaceId'), 'configured for diagnostic logs for ', ': ', parameters('vaultName'))]"
+         }
+        }
+       },
+       "parameters": {
+        "location": {
+         "value": "[field('location')]"
+        },
+        "vaultName": {
+         "value": "[field('name')]"
+        },
+        "metricsEnabled": {
+         "value": "[parameters('metricsEnabled')]"
+        },
+        "logsEnabled": {
+         "value": "[parameters('logsEnabled')]"
+        },
+        "profileName": {
+         "value": "[parameters('profileName')]"
+        },
+        "workspaceList": {
+         "value": "[parameters('workspaceList')]"
+        },
+        "logAnalyticsDestinationType": {
+         "value": "[parameters('logAnalyticsDestinationType')]"
+        },
+        "metricsCategories": {
+         "value": "[parameters('metricsCategories')]"
+        },
+        "logCategories": {
+         "value": "[parameters('logCategories')]"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
