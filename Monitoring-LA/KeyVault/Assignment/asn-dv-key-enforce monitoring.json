@@ -1,0 +1,35 @@
+{
+    "type": "Microsoft.Authorization/policyAssignments",
+    "name": "asn-dv-key-enforce monitoring",
+    "properties": {
+        "description": "This policy automatically deploys diagnostic settings for Azure Key Vault to a Log Analytics workspace.",
+        "displayName": "asn-dv-key-enforce monitoring",
+        "parameters": {
+            "effect": {
+                "value": "deployIfNotExists"
+            },
+            "exceptionTagValue": {
+                "value": "skipmonpol"
+            }
+        },
+        "nonComplianceMessages": [
+            {
+                "message": "Diagnostic settings is not enabled."
+            }
+        ],
+        "resourceSelectors": [],
+        "overrides": [],
+        "notScopes": [],
+        "enforcementMode": "Default",
+        "AssignIdentity": "true",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+        "Location": "eastus",
+        "RoleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/pol-key-enforce monitoring-arm",
+        "scope": "/subscriptions/{subscriptionId}"
+    }
+}
