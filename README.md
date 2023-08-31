@@ -39,4 +39,4 @@ Let's define some policies to achieve below purposes
 5. Monitoring: Configure and forward Diagnostic/Activity Logs to central location, Enable Network Watcher etc.,
 
 
-*In addition to the Azure documentation, I have utilized various online articles from the internet to create these policies. I am genuinely thankful for their valuable assistance. Among them, a few notable ones are [Tao Yang](https://blog.tyang.org/), [Sam Cogan](https://samcogan.com/)*.
+*In addition to the Azure documentation, I have utilized various online articles from the internet to create these policies. I am genuinely thankful for their valuable assistance. Among them, a few notable ones are [Tao Yang](https://blog.tyang.org/), [Sam Cogan](https://samcogan.com/), [Jithendra Devineni](https://www.linkedin.com/in/jithendra-devineni-abb02b25)*.
