@@ -17,17 +17,17 @@ For more details visit https://learn.microsoft.com/en-in/azure/governance/policy
 There are many in-built policies in Azure which can be used. However, these policies cannot be modified. So it's better to create custom policies with below policy standards. It helps in managing policies in a better way.
 
 ## Custom Policy Standards 
-**Clear Objective**: Define a clear purpose for your custom policy. Know what specific governance or compliance requirement it addresses.
-**Parameterization**: Use policy parameters for flexibility and reusability across different scenarios. Always set a default value (ideally a value which will work for most of the scenario) for a parameter to simplify assignment deployment.
-**Use Exception Tag**: Add a rule in the policy using tag to exclude policy for a resource. Value for this tag can be passed as parameter. This parameter is used to trigger whether the policy needs to take effect or not. If any *resource* or parent *resource group* has this value present in the *tag* named as *exceptiontag* the policy will not trigger.
-**Consistency**: Maintain consistency across naming conventions, policy structure, and design principles.
-**Clear Naming**: Use descriptive names for policies that reflect their intent.
-**Version Control**: Implement version control for policies to track changes and maintain a history.
-**Documentation**: Document policy intent, use cases, and implementation details for easy reference.
-**Thorough Testing**: Test policies in a controlled environment before applying them to production resources.
-**Community Policies**: Explore Azure Policy initiatives from the community and adapt them as needed.
-**Iterative Approach**: Refine policies iteratively based on feedback and practical experience.
-**Educate Users**: Educate users on policy implications, compliance, and their responsibilities.
+- **Clear Objective**: Define a clear purpose for your custom policy. Know what specific governance or compliance requirement it addresses. 
+- **Parameterization**: Use policy parameters for flexibility and reusability across different scenarios. Always set a default value (ideally a value which will work for most of the scenario) for a parameter to simplify assignment deployment. 
+- **Use Exception Tag**: Add a rule in the policy using tag to exclude policy for a resource. Value for this tag can be passed as parameter. This parameter is used to trigger whether the policy needs to take effect or not. If any *resource* or parent *resource group* has this value present in the *tag* named as *exceptiontag* the policy will not trigger. 
+- **Consistency**: Maintain consistency across naming conventions, policy structure, and design principles.
+- **Clear Naming**: Use descriptive names for policies that reflect their intent.
+- **Version Control**: Implement version control for policies to track changes and maintain a history.
+- **Documentation**: Document policy intent, use cases, and implementation details for easy reference.
+- **Thorough Testing**: Test policies in a controlled environment before applying them to production resources.
+- **Community Policies**: Explore Azure Policy initiatives from the community and adapt them as needed.
+- **Iterative Approach**: Refine policies iteratively based on feedback and practical experience.
+- **Educate Users**: Educate users on policy implications, compliance, and their responsibilities.
 
 ## Sample Policy
 Let's define some policies to achieve below purposes
